@@ -119,6 +119,10 @@ export default function MPWaterTourismBook() {
   doc.save("MPTB_Water_Tourism_Book.pdf")
 }
 
+const handlePrint = () => {
+    window.print()
+}
+
   const nextPage = () => {
     if (currentPage < pages.length - 1) {
       setCurrentPage(currentPage + 1)
