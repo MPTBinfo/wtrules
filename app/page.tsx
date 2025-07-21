@@ -1324,3 +1324,144 @@ export default function MPWaterTourismBook() {
     </div>
   )
 }
+"use client"
+
+import { useState } from "react"
+import {
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  Printer,
+  FileCheck,
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import Image from "next/image"
+
+export default function MPWaterTourismBook() {
+  const [currentPage, setCurrentPage] = useState(0)
+
+  const pages = [
+    "Cover Page",
+    "Table of Contents",
+    "Introduction",
+    "Definitions",
+    "Permission Process",
+    "Fee Structure",
+    "Compliance Requirements",
+    "Safety Guidelines",
+    "Water Tourism Locations",
+    "Operator Registration Form",
+    "Post-LOA Document Upload",
+    "Vendor Registration Form",
+    "LOA Format",
+    "License Format",
+    "Contact Information",
+    "Back Cover"
+  ]
+
+  const handleDownload = () => {
+    import("jspdf").then(jsPDF => {
+      const doc = new jsPDF.jsPDF();
+      doc.text("MPTB Water Tourism SOP - Summary", 10, 10);
+      doc.save("MPTB_Water_Tourism_SOP.pdf");
+    });
+  };
+
+  const renderStep = () => {
+    const step = pages[currentPage]
+
+    switch (step) {
+      case "Post-LOA Document Upload":
+        return (
+          <div className="p-8">
+            <h2 className="text-3xl font-bold text-blue-800 mb-6">Post-LOA Document Upload</h2>
+            <p className="mb-4 text-gray-700">
+              Upload the following documents to proceed with license issuance.
+            </p>
+            {[
+              "LOA Number",
+              "IRS Certificate",
+              "Vessel Invoice",
+              "Third-party Insurance Certificate",
+              "Boat Operator Certificates",
+              "License Fee Proof (Screenshot or DD Image)",
+            ].map((label, idx) => (
+              <div key={idx} className="mb-3">
+                <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+                <input type="file" className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50" />
+              </div>
+            ))}
+            <button className="mt-4 px-4 py-2 bg-blue-700 text-white rounded">Submit Documents</button>
+          </div>
+        )
+
+      case "Vendor Registration Form":
+        return (
+          <div className="p-8">
+            <h2 className="text-3xl font-bold text-blue-800 mb-6">Vendor Registration Form</h2>
+            <p className="mb-4 text-gray-600">
+              Please download and fill the official vendor registration form.
+            </p>
+            <a
+              href="/forms/Vendor_form2868374(36)_2025_MPTB(FIN).pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline flex items-center space-x-2"
+            >
+              <FileCheck className="w-5 h-5" />
+              <span>Download Vendor Form</span>
+            </a>
+          </div>
+        )
+
+      default:
+        return (
+          <div className="p-8 text-gray-600">
+            <h2 className="text-2xl font-semibold">Coming Soon</h2>
+            <p>This section is under development.</p>
+          </div>
+        )
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Header */}
+      <div className="bg-blue-800 text-white p-4 flex justify-between items-center">
+        <div className="flex items-center space-x-3">
+          <Image src="/images/mp-logo.png" alt="MP Logo" width={40} height={40} />
+          <div>
+            <h1 className="text-lg font-bold">मध्यप्रदेश पर्यटन बोर्ड</h1>
+            <p className="text-sm">Water Tourism SOP 2025</p>
+          </div>
+        </div>
+        <div className="flex items-center space-x-3">
+          <Button onClick={handleDownload} variant="secondary">
+            <Download className="w-4 h-4 mr-2" />
+            Download PDF
+          </Button>
+          <Button onClick={() => window.print()} variant="secondary">
+            <Printer className="w-4 h-4 mr-2" />
+            Print
+          </Button>
+        </div>
+      </div>
+
+      {/* Page Content */}
+      <div className="flex-grow overflow-y-auto">{renderStep()}</div>
+
+      {/* Navigation */}
+      <div className="bg-gray-100 p-3 flex justify-between items-center">
+        <Button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 0}>
+          <ChevronLeft className="w-4 h-4 mr-1" /> Previous
+        </Button>
+        <span className="text-sm">Page {currentPage + 1} of {pages.length}</span>
+        <Button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === pages.length - 1}>
+          Next <ChevronRight className="w-4 h-4 ml-1" />
+        </Button>
+      </div>
+    </div>
+  )
+}
