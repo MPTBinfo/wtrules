@@ -37,7 +37,9 @@ export default function MPWaterTourismBook() {
     { id: "compliance", title: "Compliance Requirements" },
     { id: "safety", title: "Safety Guidelines" },
     { id: "locations", title: "Water Tourism Locations" },
-    { id: "forms", title: "Application Forms" },
+    { id: "forms", title: "Operator Registration Form" },
+    { id: "Post-LOA", title: "Post-LOA Document Upload"},           
+    {id:  "Vendor", title: "Vendor Registration Form"}, 
     { id: "loa-format", title: "LOA Format" },
     { id: "license-english", title: "License Format (English)" },
     { id: "contacts", title: "Contact Information" },
@@ -93,21 +95,29 @@ export default function MPWaterTourismBook() {
     return 0
   }
 
-  const updateTotalFee = () => {
-    const total = selectedActivities.reduce((sum, activity) => {
-      return sum + calculateFee(activity)
-    }, 0)
-    setTotalFee(total)
+ const handleDownloadPDF = async () => {
+  const jsPDF = (await import("jspdf")).jsPDF
+  const html2canvas = (await import("html2canvas")).default
+
+  const doc = new jsPDF("p", "mm", "a4")
+  const contentElements = document.querySelectorAll(".sop-page")
+
+  for (let i = 0; i < contentElements.length; i++) {
+    const canvas = await html2canvas(contentElements[i] as HTMLElement, {
+      scale: 2,
+      useCORS: true,
+    })
+    const imgData = canvas.toDataURL("image/png")
+    const imgProps = doc.getImageProperties(imgData)
+    const pdfWidth = doc.internal.pageSize.getWidth()
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width
+
+    if (i !== 0) doc.addPage()
+    doc.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight)
   }
 
-  const handlePrint = () => {
-    window.print()
-  }
-
-  const handleDownloadPDF = () => {
-    // This would typically integrate with a PDF generation library
-    alert("PDF download functionality would be implemented here")
-  }
+  doc.save("MPTB_Water_Tourism_Book.pdf")
+}
 
   const nextPage = () => {
     if (currentPage < pages.length - 1) {
@@ -1111,6 +1121,47 @@ export default function MPWaterTourismBook() {
                 <p>🌐 www.tourism.mp.gov.in</p>
               </div>
             </div>
+      case "Post-LOA Document Upload":
+      return (
+        <div className="p-8">
+          <h2 className="text-3xl font-bold text-blue-800 mb-6">Post-LOA Document Upload</h2>
+          <p className="mb-4 text-gray-700">
+            Upload the following documents to proceed with license issuance.
+          </p>
+          {[
+            "LOA Number",
+            "IRS Certificate",
+            "Vessel Invoice",
+            "Third-party Insurance Certificate",
+            "Boat Operator Certificates",
+            "License Fee Proof (Screenshot or DD Image)",
+          ].map((label, idx) => (
+            <div key={idx} className="mb-3">
+              <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+              <input type="file" className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50" />
+            </div>
+          ))}
+          <button className="mt-4 px-4 py-2 bg-blue-700 text-white rounded">Submit Documents</button>
+        </div>
+      )
+ case "Vendor Registration Form":
+      return (
+        <div className="p-8">
+          <h2 className="text-3xl font-bold text-blue-800 mb-6">Vendor Registration Form</h2>
+          <p className="mb-4 text-gray-600">
+            Please download and fill the official vendor registration form.
+          </p>
+          <a
+            href="/forms/Vendor_form2868374(36)_2025_MPTB(FIN).pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline flex items-center space-x-2"
+          >
+            <FileCheck className="w-5 h-5" />
+            <span>Download Vendor Form</span>
+          </a>
+        </div>
+      )
 
             <div className="text-center">
               <p className="text-lg font-semibold text-blue-800 mb-2">MADHYA PRADESH</p>
@@ -1284,6 +1335,7 @@ export default function MPWaterTourismBook() {
               onClick={handlePrint}
               variant="outline"
               size="sm"
+              
               className="flex items-center space-x-2 bg-transparent"
             >
               <Printer className="w-4 h-4" />
