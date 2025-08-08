@@ -12,6 +12,7 @@ import {
   Calculator,
   Download,
   Printer,
+  FileCheck,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -93,6 +94,13 @@ export default function MPWaterTourismBook() {
       return baseAmount + gstAmount
     }
     return 0
+  }
+
+  const updateTotalFee = () => {
+    const total = selectedActivities.reduce((sum, activityName) => {
+      return sum + calculateFee(activityName)
+    }, 0)
+    setTotalFee(total)
   }
 
  const handleDownloadPDF = async () => {
@@ -1125,48 +1133,6 @@ const handlePrint = () => {
                 <p>🌐 www.tourism.mp.gov.in</p>
               </div>
             </div>
-      case "Post-LOA Document Upload":
-      return (
-        <div className="p-8">
-          <h2 className="text-3xl font-bold text-blue-800 mb-6">Post-LOA Document Upload</h2>
-          <p className="mb-4 text-gray-700">
-            Upload the following documents to proceed with license issuance.
-          </p>
-          {[
-            "LOA Number",
-            "IRS Certificate",
-            "Vessel Invoice",
-            "Third-party Insurance Certificate",
-            "Boat Operator Certificates",
-            "License Fee Proof (Screenshot or DD Image)",
-          ].map((label, idx) => (
-            <div key={idx} className="mb-3">
-              <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-              <input type="file" className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50" />
-            </div>
-          ))}
-          <button className="mt-4 px-4 py-2 bg-blue-700 text-white rounded">Submit Documents</button>
-        </div>
-      )
- case "Vendor Registration Form":
-      return (
-        <div className="p-8">
-          <h2 className="text-3xl font-bold text-blue-800 mb-6">Vendor Registration Form</h2>
-          <p className="mb-4 text-gray-600">
-            Please download and fill the official vendor registration form.
-          </p>
-          <a
-            href="/forms/Vendor_form2868374(36)_2025_MPTB(FIN).pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline flex items-center space-x-2"
-          >
-            <FileCheck className="w-5 h-5" />
-            <span>Download Vendor Form</span>
-          </a>
-        </div>
-      )
-
             <div className="text-center">
               <p className="text-lg font-semibold text-blue-800 mb-2">MADHYA PRADESH</p>
               <p className="text-lg font-semibold text-blue-700">THE HEART OF INCREDIBLE INDIA</p>
@@ -1176,6 +1142,50 @@ const handlePrint = () => {
               <p>© 2025 Madhya Pradesh Tourism Board</p>
               <p>All Rights Reserved</p>
             </div>
+          </div>
+        )
+      case "Post-LOA Document Upload":
+        return (
+          <div className="p-8">
+            <h2 className="text-3xl font-bold text-blue-800 mb-6">Post-LOA Document Upload</h2>
+            <p className="mb-4 text-gray-700">
+              Upload the following documents to proceed with license issuance.
+            </p>
+            {[
+              "LOA Number",
+              "IRS Certificate",
+              "Vessel Invoice",
+              "Third-party Insurance Certificate",
+              "Boat Operator Certificates",
+              "License Fee Proof (Screenshot or DD Image)",
+            ].map((label, idx) => (
+              <div key={idx} className="mb-3">
+                <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+                <input
+                  type="file"
+                  className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                />
+              </div>
+            ))}
+            <button className="mt-4 px-4 py-2 bg-blue-700 text-white rounded">Submit Documents</button>
+          </div>
+        )
+      case "Vendor Registration Form":
+        return (
+          <div className="p-8">
+            <h2 className="text-3xl font-bold text-blue-800 mb-6">Vendor Registration Form</h2>
+            <p className="mb-4 text-gray-600">
+              Please download and fill the official vendor registration form.
+            </p>
+            <a
+              href="/forms/Vendor_form2868374(36)_2025_MPTB(FIN).pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline flex items-center space-x-2"
+            >
+              <FileCheck className="w-5 h-5" />
+              <span>Download Vendor Form</span>
+            </a>
           </div>
         )
 
