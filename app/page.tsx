@@ -95,6 +95,11 @@ export default function MPWaterTourismBook() {
     return 0
   }
 
+  const updateTotalFee = (activityNames: string[]) => {
+    const nextTotal = activityNames.reduce((sum, activityName) => sum + calculateFee(activityName), 0)
+    setTotalFee(nextTotal)
+  }
+
  const handleDownloadPDF = async () => {
   const jsPDF = (await import("jspdf")).jsPDF
   const html2canvas = (await import("html2canvas")).default
@@ -537,12 +542,11 @@ const handlePrint = () => {
                             id={activity.name}
                             checked={selectedActivities.includes(activity.name)}
                             onCheckedChange={(checked) => {
-                              if (checked) {
-                                setSelectedActivities([...selectedActivities, activity.name])
-                              } else {
-                                setSelectedActivities(selectedActivities.filter((a) => a !== activity.name))
-                              }
-                              setTimeout(updateTotalFee, 100)
+                              const nextActivities = checked
+                                ? Array.from(new Set([...selectedActivities, activity.name]))
+                                : selectedActivities.filter((name) => name !== activity.name)
+                              setSelectedActivities(nextActivities)
+                              updateTotalFee(nextActivities)
                             }}
                           />
                           <Label htmlFor={activity.name} className="text-sm">
