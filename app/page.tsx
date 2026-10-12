@@ -12,6 +12,7 @@ import {
   Calculator,
   Download,
   Printer,
+  FileCheck,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -549,8 +550,11 @@ const handlePrint = () => {
                               updateTotalFee(nextActivities)
                             }}
                           />
-                          <Label htmlFor={activity.name} className="text-sm">
+                          <Label htmlFor={activity.name} className="text-sm flex-1">
                             {activity.name}
+                            <span className="block text-xs text-gray-500">
+                              ₹{activity.fee.toLocaleString("en-IN")} + 18% GST
+                            </span>
                           </Label>
                         </div>
                       ))}
@@ -562,7 +566,7 @@ const handlePrint = () => {
                         Total Fee Calculation:
                       </h5>
                       <p className="text-sm text-gray-600 mb-2">
-                        Base Fee: ₹2000 + 18% GST = ₹2360 per activity per quantity
+                        Listed base fee varies by activity; 18% GST is added. Verify rates against the currently approved fee schedule.
                       </p>
                       <p className="text-lg font-bold text-blue-800">Total Amount: ₹{totalFee.toLocaleString()}</p>
                     </div>
