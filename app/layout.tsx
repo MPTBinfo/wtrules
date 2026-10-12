@@ -2,9 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: 'Madhya Pradesh Water Tourism Rules & Permission Guide',
+  description: 'Hindi-English reference for Madhya Pradesh water tourism permission procedures, fee structure, notified waterbodies, safety, compliance, forms and LOA formats.',
 }
 
 export default function RootLayout({
